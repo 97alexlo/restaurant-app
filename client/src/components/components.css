@@ -1,0 +1,39 @@
+table{
+  border-radius: 5px;
+}
+
+tr{
+  border-radius:5px;
+}
+
+th:nth-child(1) {
+  border: none;
+  border-radius: 5px 0px 0px 0px;
+}
+
+th:nth-last-child(1) {
+  border: none;
+  border-radius: 0px 5px 0px 0px;
+}
+
+.d-flex {
+  display: flex!important;
+  height: 100vh;
+}
+
+.center {
+  margin: 0 auto;
+  align-self: center;
+}
+
+.card-header{
+  flex: 0 0 38px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+button.close {
+  position:absolute;
+  right:10px;
+  top: 5px;
+}
