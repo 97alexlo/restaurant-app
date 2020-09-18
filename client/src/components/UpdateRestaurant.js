@@ -1,9 +1,11 @@
 import React, {Fragment, useState} from 'react'
+import { useHistory } from "react-router-dom";
 
 const UpdateRestaurant = ({restaurant}) => {
   const [name, setName] = useState(restaurant.name);
   const [location, setLocation] = useState(restaurant.location);
   const [priceRange, setPriceRange] = useState(restaurant.price_range);
+  let history = useHistory();
 
   // update 
   const handleUpdate = async (e) => {
@@ -18,7 +20,7 @@ const UpdateRestaurant = ({restaurant}) => {
           price_range: priceRange
         })
       });
-      window.location = "/";
+        window.location.reload();
     }
     catch (err) {
       console.error(err.message)
@@ -52,7 +54,7 @@ const UpdateRestaurant = ({restaurant}) => {
             </div>
             <div className="modal-body">
               <div className="form-group">
-              <label className="font-weight-light text-dark">Name</label>
+              <label className="text-dark">Name</label>
                 <input 
                   value={name} 
                   onChange={e => setName(e.target.value)} 
@@ -62,7 +64,7 @@ const UpdateRestaurant = ({restaurant}) => {
                 />
               </div>
               <div className="form-group">
-                <label className="font-weight-light text-dark">Location</label>
+                <label className="text-dark">Location</label>
                   <input 
                     value={location} 
                     onChange={e => setLocation(e.target.value)} 
@@ -71,7 +73,7 @@ const UpdateRestaurant = ({restaurant}) => {
                   />
               </div>
               <div className="form-group">
-              <label className="font-weight-light text-dark">Price Range ($)</label>
+              <label className="text-dark">Price Range ($)</label>
               <div>
                 <select 
                   style={{width: '200px'}}
@@ -97,7 +99,7 @@ const UpdateRestaurant = ({restaurant}) => {
                 Close
               </button>
               <button 
-                onClick={(e) => handleUpdate(e)}
+                onClick={e => handleUpdate(e)}
                 type="button" 
                 className="btn btn-warning" data-dismiss="modal"
               >

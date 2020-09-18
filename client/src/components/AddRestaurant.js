@@ -1,6 +1,8 @@
-import React, { Fragment, useState } from 'react'
-
+import React, { Fragment, useState, useContext } from 'react'
+import { RestaurantsContext }  from '../context/contextAPI.js';
 const AddRestaurant = () => {
+
+  const { addRestaurants } = useContext(RestaurantsContext);
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [priceRange, setPriceRange] = useState("");
@@ -17,26 +19,18 @@ const AddRestaurant = () => {
           location: location,
           price_range: priceRange
         })
-      });
-      window.location = "/";
-      // console.log(response);
+      })
+      const parsePost = await response.json();
+      addRestaurants(parsePost.data.restaurant);
     }
     catch(err) {
       console.error(err.message);
     }
+    // clear input fields after submitting
+    setName("");
+    setLocation("");
+    setPriceRange("");
   };
-
-  const handleSearch = async(e) => {
-    e.preventDefault(); //prevent page from reloading
-    try {
-      const response = await fetch(`/search/?name=${name}`);
-      const parseResponse = await response.json();
-      console.log(parseResponse);
-    }
-    catch(err) {
-      console.error(err.message);
-    }
-  }
 
   return (
     <Fragment>

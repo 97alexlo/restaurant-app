@@ -1,12 +1,30 @@
-import React, {Fragment, useState, useEffect} from 'react';
+import React, {Fragment, useState, useEffect, useContext} from 'react';
 import './components.css';
 import UpdateRestaurant from './UpdateRestaurant';
+import { RestaurantsContext } from "../context/contextAPI";
+import { useHistory } from "react-router-dom";
 import StarRating from './StarRating';
-import ReviewModal from './ReviewModal';
+import ReviewModal from '../routes/ReviewModal';
 
-const RestaurantsList = () => {
-  const [restaurants, setRestaurants] = useState([]);
+const RestaurantsList = (props) => {
+  const { restaurants, setRestaurants } = useContext(RestaurantsContext);
   const [nameSearch, setNameSearch] = useState("");
+  let history = useHistory();
+
+  const getRestaurants = async () => {
+    try {
+      const res = await fetch("/restaurants");
+      const restaurantsArray = await res.json();
+      setRestaurants(restaurantsArray.data.restaurants);
+    }
+    catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  useEffect(() => {
+    getRestaurants();
+  }, []);
 
   // delete restaurant
   const handleDelete = async (id) => {
@@ -37,17 +55,6 @@ const RestaurantsList = () => {
     );
   };
 
-  const getRestaurants = async () => {
-    try {
-      const res = await fetch("/restaurants");
-      const restaurantsArray = await res.json();
-      setRestaurants(restaurantsArray.data.restaurants);
-    }
-    catch (err) {
-      console.error(err.message);
-    }
-  };
-
   useEffect(() => {
     getRestaurants();
   }, []);
@@ -76,6 +83,10 @@ const RestaurantsList = () => {
       console.error(err.message);
     }
   }
+
+  const handleRestaurantSelect = (id) => {
+    history.push(`/restaurants/${id}`);
+  };
 
   return (
     <Fragment>
@@ -129,7 +140,13 @@ const RestaurantsList = () => {
             <td>{"$".repeat(restaurant.price_range)}</td>
             <td>{renderRating(restaurant)}</td>
             <td>
-                <ReviewModal restaurant={restaurant}/>
+               <button 
+               onClick={() => handleRestaurantSelect(restaurant.id)}
+               key={restaurant.id}
+               className="btn btn-info"
+              >
+                View
+              </button>
             </td>
             <td>{
               <UpdateRestaurant restaurant={restaurant}/>

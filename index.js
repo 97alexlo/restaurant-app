@@ -12,7 +12,11 @@ app.use(express.json());
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
   // Set static folder
+  console.log("in production mode");
   app.use(express.static('client/build'));
+  // app.get('*', (request, response) => {
+  //   response.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  // });
 }
 
 // routes
@@ -60,7 +64,7 @@ app.get("/restaurants/:id", async (req, res) => {
     // equivalent to select * from restaurants where id = req.params.id
     const restaurant = await pool.query("select * from restaurants left join (select restaurant_id, count(*), trunc(avg(rating), 1) as avg_rating from reviews group by restaurant_id) reviews on restaurants.id = reviews.restaurant_id where id = $1;", [req.params.id]);
 
-    const reviews = await pool.query("select * from reviews where restaurant_id =$1", [req.params.id]);
+    const reviews = await pool.query("select * from reviews where restaurant_id = $1", [req.params.id]);
 
     res.status(200).json({
       status:"success",
@@ -128,7 +132,7 @@ app.get("/search", async(req, res) => {
   try {
     const {name} = req.query;
     // ILIKE = not case sensitive version of LIKE
-    const restaurant = await pool.query("SELECT * FROM restaurants WHERE name ILIKE $1", [`%${name}%`]);
+    const restaurant = await pool.query("SELECT * FROM (select * from restaurants left join (select restaurant_id, count(*), trunc(avg(rating), 1) as avg_rating from reviews group by restaurant_id) reviews on restaurants.id = reviews.restaurant_id) as reset WHERE reset.name ILIKE $1;", [`%${name}%`]);
     res.json(restaurant.rows);
   } 
   catch (err) {
