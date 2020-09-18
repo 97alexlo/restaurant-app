@@ -119,12 +119,12 @@ const RestaurantsList = (props) => {
         </div>
     </form>
       <div className="list-group">
-        <table className="table table-hover table-dark mx-auto">
+        <table className="text-nowrap table table-hover table-dark mx-auto">
         <thead>
         <tr className="bg-primary">
           <th scope="col">Restaurant</th>
           <th scope="col">Location</th>
-          <th scope="col">Price Range</th>
+          <th className="text-nowrap" scope="col">Price Range</th>
           <th scope="col">Rating</th>
           <th scope="col">Reviews</th>
           <th scope="col">Update</th>
